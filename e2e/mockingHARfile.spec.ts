@@ -14,5 +14,5 @@ test("API tests Request Mocking from HAR", async ({ page }) => {
   await page.goto("https://demo.playwright.dev/api-mocking");
 
   // Assert that the fruit is visible
-  await expect(page.getByText("Test Mu AI")).toBeVisible();
+  await expect(page.getByText("TestMu AI")).toBeVisible();
 });

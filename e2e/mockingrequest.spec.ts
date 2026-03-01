@@ -5,29 +5,28 @@ let apiresponse: string;
 dotenv.config();
 
 test("API tests Request Mocking", async ({ page }) => {
-  await page.route("*/**/api/v1/fruits", async (route) => {
-    const json = [{ name: "Test Mu AI", id: 21 }];
-    await route.fulfill({ json });
+
+  // Register route BEFORE navigation
+  await page.route("**/api/v1/fruits", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([
+        { name: "Apple", id: 1 },
+        { name: "Banana", id: 2 },
+        { name: "TestMu AI", id: 100 }
+      ]),
+    });
   });
 
-  // Go to the page
+  // Now navigate (this triggers API call)
   await page.goto("https://demo.playwright.dev/api-mocking");
 
-  // Assert that the Strawberry fruit is visible
-  await expect(page.getByText("Test Mu AI")).toBeVisible();
+  // Assertion
+  await expect(
+    page.getByText("TestMu AI", { exact: true })
+  ).toBeVisible();
 
-  await page.route("*/**/api/v1/fruits", async (route) => {
-    const response = await route.fetch();
-    const json = await response.json();
-    json.push({ name: "Test Mu AI Testing", id: 100 });
-    await route.fulfill({ response, json });
-  });
-
-  // Go to the page
-  await page.goto("https://demo.playwright.dev/api-mocking");
-
-  // Assert that the new fruit is visible
-  await expect(page.getByText("Test Mu AI Testing", { exact: true })).toBeVisible();
 });
 
 test("API Response Mocking", async ({ page }) => {
@@ -35,7 +34,7 @@ test("API Response Mocking", async ({ page }) => {
   await page.route("*/**/api/v1/fruits", async (route) => {
     const response = await route.fetch();
     const json = await response.json();
-    json.push({ name: "Test Mu AI Testing", id: 100 });
+    json.push({ name: "TestMu AI Testing", id: 100 });
     // Fulfill using the original response, while patching the response body
     // with the given JSON object.
     await route.fulfill({ response, json });
@@ -45,5 +44,7 @@ test("API Response Mocking", async ({ page }) => {
   await page.goto("https://demo.playwright.dev/api-mocking");
 
   // Assert that the new fruit is visible
-  await expect(page.getByText("Test Mu AI Testing", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("TestMu AI Testing", { exact: true }),
+  ).toBeVisible();
 });
