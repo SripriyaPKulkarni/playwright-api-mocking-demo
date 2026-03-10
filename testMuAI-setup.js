@@ -1,5 +1,5 @@
 /**
- * Add the file in your test suite to run tests on LambdaTest.
+ * Add the file in your test suite to run tests on TestMu AI.
  * Import `test` object from this file in the tests.
  */
 
@@ -9,7 +9,7 @@ import { chromium } from "@playwright/test"
 import dotenv from 'dotenv';
 dotenv.config();
 
-// LambdaTest capabilities
+// TestMu AI capabilities
 // These are base configurations.
 // But to run with different browser and OS please use projects mentioned in the playwright.config.ts
 const capabilities = {
@@ -31,7 +31,7 @@ const capabilities = {
 
 // Patching the capabilities dynamically according to the project name.
 const modifyCapabilities = (configName, testName) => {
-  let config = configName.split("@lambdatest")[0];
+  let config = configName.split("@TestMu AI")[0];
   let [browserName, browserVersion, platform] = config.split(":");
   capabilities.browserName = browserName
     ? browserName
@@ -55,16 +55,16 @@ const getErrorMessage = (obj, keys) =>
 const test = base.test.extend({
   page: async ({ page, playwright }, use, testInfo) => {
 
-    // Configure LambdaTest platform for cross-browser testing
+    // Configure TestMu AI platform for cross-browser testing
     let fileName = testInfo.file.split(path.sep).pop();
-    if (testInfo.project.name.match(/lambdatest/)) {
+    if (testInfo.project.name.match(/TestMu AI/)) {
       modifyCapabilities(
         testInfo.project.name,
         `${testInfo.title} - ${fileName}`
       );
 
       const browser = await chromium.connect({
-        wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`,
+        wsEndpoint: `wss://cdp.TestMu AI.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`,
         timeout: 60000 // Timeout in milliseconds (e.g., 60000ms = 60 seconds)
       });
 
@@ -82,7 +82,7 @@ const test = base.test.extend({
         },
       };
       await ltPage.evaluate(() => { },
-        `lambdatest_action: ${JSON.stringify(testStatus)}`);
+        `TestMu AI_action: ${JSON.stringify(testStatus)}`);
       await ltPage.close();
       await browser.close();
     } else {

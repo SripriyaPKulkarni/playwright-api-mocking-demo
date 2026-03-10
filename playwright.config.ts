@@ -39,7 +39,7 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chrome:latest:Windows 11@lambdatest",
+      name: "chrome:latest:Windows 11@TestMu AI",
       use: {
         viewport: { width: 1280, height: 1080 },
       },
