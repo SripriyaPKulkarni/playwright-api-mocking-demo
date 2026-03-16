@@ -1,5 +1,5 @@
 import { expect, request } from "@playwright/test";
-import test from "../testMuAI-setup";
+import test from "../testmuai-setup";
 import dotenv from "dotenv";
 let apiresponse: string;
 dotenv.config();
