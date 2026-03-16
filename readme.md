@@ -4,7 +4,7 @@ This is the repository created as part of integrating TestMu AI Cloud with Playw
 
 ## Prerequisites
 1. Node JS
-2. Account in TestMu AI Cloud - https://TestMu AI.com/
+2. Account in TestMu AI Cloud - [https://TestMu AI.com/ ](https://www.testmuai.com/)
 3. Any IDE (Preferrably VS CODE)
 
 ## Installation
