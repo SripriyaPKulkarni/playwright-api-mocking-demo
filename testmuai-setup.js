@@ -57,7 +57,7 @@ const test = base.test.extend({
 
     // Configure TestMu AI platform for cross-browser testing
     let fileName = testInfo.file.split(path.sep).pop();
-    if (testInfo.project.name.match(/TestMu AI/)) {
+    if (testInfo.project.name) {
       modifyCapabilities(
         testInfo.project.name,
         `${testInfo.title} - ${fileName}`
@@ -87,7 +87,7 @@ const test = base.test.extend({
           },
         };
         await ltPage.evaluate(() => { },
-          `TestMu AI_action: ${JSON.stringify(testStatus)}`);
+          `lambdatest_action: ${JSON.stringify(testStatus)}`);
         await ltPage.close();
         await browser.close();
       } catch (error) {
