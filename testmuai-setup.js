@@ -63,28 +63,38 @@ const test = base.test.extend({
         `${testInfo.title} - ${fileName}`
       );
 
-      const browser = await chromium.connect({
-        wsEndpoint: `wss://cdp.TestMu AI.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`,
-        timeout: 60000 // Timeout in milliseconds (e.g., 60000ms = 60 seconds)
-      });
+      console.log("Connecting to LambdaTest with capabilities:", JSON.stringify(capabilities, null, 2));
+      console.log("Endpoint:", `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`);
+      
+      try {
+        const browser = await chromium.connect({
+          wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`,
+          timeout: 120000 // Timeout in milliseconds (120 seconds for cloud setup)
+        });
+        console.log("Successfully connected to LambdaTest");
 
-      const ltPage = await browser.newPage(testInfo.project.use);
-      await ltPage.waitForLoadState('domcontentloaded');
-      await ltPage.setViewportSize({ width: 1920, height: 1080 }); // Set a default viewport size
-      await ltPage.waitForTimeout(2000); // Wait for a short period to ensure the window is maximized
-      await use(ltPage);
+        const ltPage = await browser.newPage(testInfo.project.use);
+        await ltPage.waitForLoadState('domcontentloaded');
+        await ltPage.setViewportSize({ width: 1920, height: 1080 }); // Set a default viewport size
+        await ltPage.waitForTimeout(2000); // Wait for a short period to ensure the window is maximized
+        await use(ltPage);
 
-      const testStatus = {
-        action: "setTestStatus",
-        arguments: {
-          status: testInfo.status,
-          remark: getErrorMessage(testInfo, ["error", "message"]),
-        },
-      };
-      await ltPage.evaluate(() => { },
-        `TestMu AI_action: ${JSON.stringify(testStatus)}`);
-      await ltPage.close();
-      await browser.close();
+        const testStatus = {
+          action: "setTestStatus",
+          arguments: {
+            status: testInfo.status,
+            remark: getErrorMessage(testInfo, ["error", "message"]),
+          },
+        };
+        await ltPage.evaluate(() => { },
+          `TestMu AI_action: ${JSON.stringify(testStatus)}`);
+        await ltPage.close();
+        await browser.close();
+      } catch (error) {
+        console.error("Failed to connect to LambdaTest:", error.message);
+        console.error("Stack trace:", error.stack);
+        throw error;
+      }
     } else {
       // Run tests in local in case of local config provided
       await use(page);
